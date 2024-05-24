@@ -87,6 +87,7 @@ function Main(props) {
     if (batch) {
       fetchStaff();
       getFees();
+      getSalary();
       fetchStudents();
       fetchExpenditure();
     }

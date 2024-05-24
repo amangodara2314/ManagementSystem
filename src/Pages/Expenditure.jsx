@@ -1,7 +1,16 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { MainContext } from "../Context/Main";
 import axios from "axios";
 import formatDate from "../utils/dateOfBirthFormat";
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+} from "recharts";
 
 function Expenditure(props) {
   const {
@@ -12,11 +21,17 @@ function Expenditure(props) {
     students,
     batch,
     salary,
+    fees,
   } = useContext(MainContext);
 
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [selectedEndDate, setSelectedEndDate] = useState(null);
   const [toggle, setToggle] = useState(false);
+  const [chartData, setChartData] = useState([]);
+
+  useEffect(() => {
+    generateChartData();
+  }, [selectedStartDate, selectedEndDate, expenditure, fees]);
 
   const addExpense = (e) => {
     e.preventDefault();
@@ -40,6 +55,7 @@ function Expenditure(props) {
         openToast("Client Side Error", "error");
       });
   };
+
   const filterExpenses = () => {
     if (!selectedEndDate || !selectedStartDate) {
       return expenditure;
@@ -57,7 +73,66 @@ function Expenditure(props) {
       return filter;
     }
   };
-  console.log(filterExpenses());
+
+  const generateChartData = () => {
+    if (!selectedStartDate || !selectedEndDate) {
+      const monthlyData = [];
+      const revenueByMonth = {};
+      const expensesByMonth = {};
+
+      fees?.forEach((fee) => {
+        const month = formatDate(fee.date).slice(0, 7);
+        if (!revenueByMonth[month]) revenueByMonth[month] = 0;
+        revenueByMonth[month] += fee.amount;
+      });
+
+      expenditure?.forEach((exp) => {
+        const month = formatDate(exp.date).slice(0, 7);
+        if (!expensesByMonth[month]) expensesByMonth[month] = 0;
+        expensesByMonth[month] += exp.amount;
+      });
+
+      const months = Object.keys({ ...revenueByMonth, ...expensesByMonth });
+
+      months?.forEach((month) => {
+        monthlyData.push({
+          date: month,
+          revenue: revenueByMonth[month] || 0,
+          expenses: expensesByMonth[month] || 0,
+        });
+      });
+
+      setChartData(monthlyData);
+    } else {
+      // Aggregate data day-wise within selected dates
+      const startDate = new Date(selectedStartDate);
+      const endDate = new Date(selectedEndDate);
+      const data = [];
+
+      let currentDate = new Date(startDate);
+
+      while (currentDate <= endDate) {
+        const dateString = formatDate(currentDate);
+        const dailyRevenue = fees
+          .filter((fee) => formatDate(fee.date) === dateString)
+          .reduce((total, fee) => total + fee.amount, 0);
+        const dailyExpenses = expenditure
+          .filter((exp) => formatDate(exp.date) === dateString)
+          .reduce((total, exp) => total + exp.amount, 0);
+
+        data.push({
+          date: dateString,
+          revenue: dailyRevenue,
+          expenses: dailyExpenses,
+        });
+
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+
+      setChartData(data);
+    }
+  };
+
   return (
     <>
       {toggle && (
@@ -186,23 +261,64 @@ function Expenditure(props) {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap font-bold">
                   Rs.
-                  {students?.reduce((total, student) => {
-                    return (
-                      total +
-                      student.feesPaid.reduce((acc, fee) => acc + fee.amount, 0)
-                    );
-                  }, 0) -
+                  {fees?.reduce((acc, fee) => acc + fee.amount, 0) -
                     (expenditure?.reduce((total, expense) => {
                       return total + expense.amount;
-                    }, 0) + !salary || salary?.length == 0
-                      ? 0
-                      : salary?.reduce((total, expense) => {
-                          return total + expense.amount;
-                        }, 0))}
+                    }, 0) +
+                      salary?.reduce((total, expense) => {
+                        return total + expense.amount;
+                      }, 0))}
                 </td>
               </tr>
             </tbody>
           </table>
+          <div className="flex space-x-8 items-center my-4 justify-center">
+            <div className="space-x-2">
+              <label htmlFor="">From</label>
+              <input
+                type="date"
+                onChange={(e) => setSelectedStartDate(e.target.value)}
+                className="border py-1 px-2"
+              />
+            </div>
+            <div className="space-x-2">
+              <label htmlFor="">To</label>
+
+              <input
+                type="date"
+                onChange={(e) => setSelectedEndDate(e.target.value)}
+                className="border py-1 px-2"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="">
+          <ResponsiveContainer width="100%" height={400}>
+            <AreaChart
+              data={chartData}
+              margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" />
+              <YAxis />
+              <Tooltip />
+              <Area
+                type="monotone"
+                dataKey="revenue"
+                stroke="#008000"
+                fill="#008000"
+                stackId={1}
+              />
+              <Area
+                type="monotone"
+                dataKey="expenses"
+                stroke="#FF0000"
+                fill="#FF0000"
+                stackId={1}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
         </div>
 
         <div className="mt-8">
@@ -214,25 +330,6 @@ function Expenditure(props) {
             <>
               <h3 className="text-lg font-semibold mb-4 flex justify-between">
                 Recent Expenses
-                <div className="flex space-x-8 items-center">
-                  <div className="space-x-2">
-                    <label htmlFor="">From</label>
-                    <input
-                      type="date"
-                      onChange={(e) => setSelectedStartDate(e.target.value)}
-                      className="border py-1 px-2"
-                    />
-                  </div>
-                  <div className="space-x-2">
-                    <label htmlFor="">To</label>
-
-                    <input
-                      type="date"
-                      onChange={(e) => setSelectedEndDate(e.target.value)}
-                      className="border py-1 px-2"
-                    />
-                  </div>
-                </div>
               </h3>
               <ul>
                 {filterExpenses()?.map((exp, index) => {

@@ -11,6 +11,7 @@ import AddStaff from "./Pages/AddStaff";
 import TeacherDetails from "./Pages/TeacherDetails";
 import DriverDetails from "./Pages/DriverDetails";
 import Expenditure from "./Pages/Expenditure";
+import Attendance from "./Pages/Attendance";
 
 function App() {
   const routes = createBrowserRouter([
@@ -49,6 +50,10 @@ function App() {
         {
           path: "/add-staff",
           element: <AddStaff />,
+        },
+        {
+          path: "/attendance",
+          element: <Attendance />,
         },
 
         {

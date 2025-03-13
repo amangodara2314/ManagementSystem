@@ -60,6 +60,14 @@ const Sidebar = () => {
             </li>
             <li className="py-2">
               <Link
+                to="/attendance"
+                className="block py-3 w-full text-gray-300 hover:text-white hover:bg-gray-900 duration-100 rounded px-4"
+              >
+                Attendance
+              </Link>
+            </li>
+            <li className="py-2">
+              <Link
                 to="/revenue"
                 className="block py-3 w-full text-gray-300 hover:text-white hover:bg-gray-900 duration-100 rounded px-4"
               >

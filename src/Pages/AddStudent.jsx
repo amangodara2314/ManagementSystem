@@ -24,6 +24,7 @@ function AddStudent(props) {
       studentId: e.target.studentId.value,
       aadhar: e.target.aadhar.value,
       Rollnumber: e.target.rollnumber.value,
+      janAadhar: e.target.janAadhar.value,
       name: e.target.name.value,
       dateOfBirth: e.target.dateOfBirth.value,
       gender: e.target.gender.value,
@@ -42,6 +43,11 @@ function AddStudent(props) {
       other: e.target.other.value,
       fees: e.target.fees.value,
       totalFees: e.target.totalFees.value,
+      bankDetails: {
+        bankName: e.target.bankName.value,
+        accountNumber: e.target.accountNumber.value,
+        ifscCode: e.target.ifscCode.value,
+      },
     };
     axios
       .post(API + `/students/add`, data)
@@ -125,7 +131,62 @@ function AddStudent(props) {
                   className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border px-2 py-3"
                 />
               </div>
-
+              <div>
+                <label
+                  htmlFor="janAadhar"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Jan-Aadhar
+                </label>
+                <input
+                  type="text"
+                  id="janAadhar"
+                  name="janAadhar"
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border px-2 py-3"
+                />
+              </div>{" "}
+              <div>
+                <label
+                  htmlFor="accountNumber"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Account Number
+                </label>
+                <input
+                  type="text"
+                  id="accountNumber"
+                  name="accountNumber"
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border px-2 py-3"
+                />
+              </div>{" "}
+              <div>
+                <label
+                  htmlFor="ifscCode"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Ifsc Code
+                </label>
+                <input
+                  type="text"
+                  id="ifscCode"
+                  name="ifscCode"
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border px-2 py-3"
+                />
+              </div>{" "}
+              <div>
+                <label
+                  htmlFor="bankName"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Bank Name
+                </label>
+                <input
+                  type="text"
+                  id="bankName"
+                  name="bankName"
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border px-2 py-3"
+                />
+              </div>{" "}
               <div>
                 <label
                   htmlFor="dateOfBirth"
@@ -262,7 +323,6 @@ function AddStudent(props) {
                   className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border px-2 py-3"
                 />
               </div>
-
               <div>
                 <label
                   htmlFor="class"
@@ -302,7 +362,6 @@ function AddStudent(props) {
                   <option value="geography">Geography</option>
                 </select>
               </div>
-
               <div>
                 <label
                   htmlFor="admissionFees"
@@ -357,7 +416,6 @@ function AddStudent(props) {
                   className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border px-2 py-3"
                 />
               </div>
-
               <div>
                 <label
                   htmlFor="fees"
@@ -376,7 +434,6 @@ function AddStudent(props) {
                   className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border px-2 py-3"
                 />
               </div>
-
               <div>
                 <label
                   htmlFor="totalFees"

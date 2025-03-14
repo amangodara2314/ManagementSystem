@@ -69,6 +69,12 @@ function Students(props) {
       feesStatus: e.target.feesStatus.value,
       totalFees: e.target.totalFees.value,
       lastYearDueFees: e.target.lastYearDueFees.value,
+      janAadhar: e.target.janAadhar.value,
+      bankDetails: {
+        bankName: e.target.bankName.value,
+        accountNumber: e.target.accountNumber.value,
+        ifscCode: e.target.ifscCode.value,
+      },
     };
     axios
       .put(API + `/students/update/` + selectedStudent._id, data)
@@ -169,6 +175,10 @@ function Students(props) {
           Subject: student.subject,
           FatherName: student.fatherName,
           MotherName: student.motherName,
+          JanAadhar: student.janAadhar,
+          BankName: student.bankDetails.bankName,
+          AccountNumber: student.bankDetails.accountNumber,
+          IfscCode: student.bankDetails.ifscCode,
           GuardianContact: student.guardianContact,
           AdmissionFees: student.admissionFees,
           TransportFees: student.transportFees,
@@ -228,6 +238,8 @@ function Students(props) {
       batchYear: batchYear,
       class: newClass,
       subject: student.subject,
+      janAadhar: student.janAadhar,
+      bankDetails: student.bankDetails,
       fatherName: student.fatherName,
       motherName: student.motherName,
       guardianContact: student.guardianContact,
@@ -255,6 +267,7 @@ function Students(props) {
       studentId: selectedStudent.studentId,
       aadhar: selectedStudent.aadhar,
       Rollnumber: selectedStudent.rollnumber,
+      janAadhar: selectedStudent.janAadhar,
       name: selectedStudent.name,
       dateOfBirth: selectedStudent.dateOfBirth,
       gender: selectedStudent.gender,
@@ -264,6 +277,7 @@ function Students(props) {
       address: selectedStudent.address,
       batchYear: e.target.batch.value,
       class: e.target.class.value,
+      bankDetails: selectedStudent.bankDetails,
       subject: selectedStudent.subject,
       fatherName: selectedStudent.fatherName,
       motherName: selectedStudent.motherName,
@@ -565,7 +579,66 @@ function Students(props) {
                     className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border px-2 py-3"
                   />
                 </div>
-
+                <div>
+                  <label
+                    htmlFor="janAadhar"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Jan-Aadhar
+                  </label>
+                  <input
+                    type="text"
+                    id="janAadhar"
+                    name="janAadhar"
+                    defaultValue={selectedStudent.janAadhar}
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border px-2 py-3"
+                  />
+                </div>{" "}
+                <div>
+                  <label
+                    htmlFor="accountNumber"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Account Number
+                  </label>
+                  <input
+                    type="text"
+                    id="accountNumber"
+                    name="accountNumber"
+                    defaultValue={selectedStudent.bankDetails.accountNumber}
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border px-2 py-3"
+                  />
+                </div>{" "}
+                <div>
+                  <label
+                    htmlFor="ifscCode"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Ifsc Code{" "}
+                  </label>
+                  <input
+                    type="text"
+                    id="ifscCode"
+                    name="ifscCode"
+                    defaultValue={selectedStudent.bankDetails.ifscCode}
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border px-2 py-3"
+                  />
+                </div>{" "}
+                <div>
+                  <label
+                    htmlFor="bankName"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Bank Name
+                  </label>
+                  <input
+                    type="text"
+                    id="bankName"
+                    name="bankName"
+                    defaultValue={selectedStudent.bankDetails.bankName}
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border px-2 py-3"
+                  />
+                </div>{" "}
                 <div>
                   <label
                     htmlFor="dateOfBirth"
@@ -823,7 +896,6 @@ function Students(props) {
                     className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border px-2 py-3"
                   />
                 </div>
-
                 <div>
                   <label
                     htmlFor="fees"

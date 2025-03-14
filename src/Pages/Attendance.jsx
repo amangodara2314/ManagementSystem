@@ -33,22 +33,27 @@ const Attendance = () => {
   }, [selectedClass, date, batch]);
 
   // Mark Attendance for Unmarked Students
-  const markAttendance = async (status) => {
+  const markAttendance = async (status, holidayReason = "") => {
     setLoading(true);
     try {
-      const response = await axios.post(`${API}/attendance/mark`, {
+      const requestBody = {
         date,
+        students: students.map((s) => ({
+          id: s._id,
+          status,
+          ...(status === "Holiday" && holidayReason ? { holidayReason } : {}),
+        })),
+      };
 
-        students: students.map((s) => {
-          return { id: s._id, status: status };
-        }),
-      });
+      const response = await axios.post(`${API}/attendance/mark`, requestBody);
 
       toast(response.data.message);
       setStudents((prev) =>
-        prev.map((s) => {
-          return { ...s, attendanceStatus: status };
-        })
+        prev.map((s) => ({
+          ...s,
+          attendanceStatus: status,
+          holidayReason: status === "Holiday" ? holidayReason : s.holidayReason,
+        }))
       );
     } catch (error) {
       console.error("Error marking attendance:", error);
@@ -57,6 +62,7 @@ const Attendance = () => {
       setLoading(false);
     }
   };
+
   const updateSingleStudent = async (studentId, newStatus) => {
     setUpdatingStudent(studentId);
     try {
@@ -65,7 +71,7 @@ const Attendance = () => {
         students: [{ id: studentId, status: newStatus }],
       });
 
-      alert(response.data.msg);
+      toast(response.data.message);
       setStudents((prev) =>
         prev.map((s) =>
           s._id === studentId ? { ...s, attendanceStatus: newStatus } : s
@@ -121,9 +127,12 @@ const Attendance = () => {
           Mark All Absent
         </button>
         <button
-          onClick={() => markAttendance("Holiday")}
+          onClick={() => {
+            const reason = prompt("Enter holiday reason:");
+            if (reason) markAttendance("Holiday", reason);
+          }}
           className="w-full sm:w-1/3 bg-yellow-500 hover:bg-yellow-600 text-white py-3 rounded-lg transition disabled:opacity-50"
-          disabled={loading && students.length == 0 && updatingStudent == true}
+          disabled={loading && students.length === 0}
         >
           Mark as Holiday
         </button>
@@ -162,7 +171,7 @@ const Attendance = () => {
                     className="text-center bg-white hover:bg-gray-100"
                   >
                     <td className="p-4 border">{s.name}</td>
-                    <td className="p-4 border">
+                    <td className="p-4 border space-x-2">
                       <select
                         className="p-2 border rounded"
                         value={s.attendanceStatus}
@@ -176,6 +185,9 @@ const Attendance = () => {
                         <option value="Absent">Absent</option>
                         <option value="Holiday">Holiday</option>
                       </select>
+                      {s.attendanceStatus == "Holiday" && (
+                        <span>Reason : {s.holidayReason}</span>
+                      )}
                     </td>
                   </tr>
                 ))

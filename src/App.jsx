@@ -12,6 +12,7 @@ import TeacherDetails from "./Pages/TeacherDetails";
 import DriverDetails from "./Pages/DriverDetails";
 import Expenditure from "./Pages/Expenditure";
 import Attendance from "./Pages/Attendance";
+import DownloadAttendance from "./Pages/DownloadAttendance";
 
 function App() {
   const routes = createBrowserRouter([
@@ -54,6 +55,10 @@ function App() {
         {
           path: "/attendance",
           element: <Attendance />,
+        },
+        {
+          path: "/download-attendance",
+          element: <DownloadAttendance />,
         },
 
         {

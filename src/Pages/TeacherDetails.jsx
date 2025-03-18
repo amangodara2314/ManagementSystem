@@ -44,8 +44,8 @@ function TeacherDetails({}) {
               <div className="flex gap-16 w-full items-center px-4">
                 {staffDetails.image == undefined ? (
                   <>
-                    <div className="font-bold text-gray-500">
-                      Image Unavailable
+                    <div className="font-bold bg-gray-50 border h-32 w-32 flex justify-center text-center items-center">
+                      <span>Image Unavailable</span>
                     </div>
                   </>
                 ) : (
@@ -111,7 +111,8 @@ function TeacherDetails({}) {
                               key={i}
                               className="px-6 py-2 whitespace-nowrap flex flex-col gap-2"
                             >
-                              Rs.{f.amount} - {formatDate(f.date)}
+                              Rs.{f.amount} - {formatDate(f.date)} - method -{" "}
+                              {f.method ? f.method : "N/A"}
                             </td>
                           );
                         })
@@ -142,7 +143,11 @@ function TeacherDetails({}) {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         Rs.
-                        {staffDetails?.salary}
+                        {staffDetails?.salary -
+                          staffDetails?.salaryPaid?.reduce(
+                            (a, b) => a + b.amount,
+                            0
+                          )}
                       </td>
                     </tr>
                   </tbody>

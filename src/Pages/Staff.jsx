@@ -25,6 +25,7 @@ function Staff(props) {
       amount: e.target.amount.value,
       staffId: staffDetails._id,
       batch: batch,
+      method: e.target.method.value,
     };
     axios
       .post(API + "/salary/add", data)
@@ -299,17 +300,34 @@ function Staff(props) {
                   </label>
                   <input
                     type="number"
-                    defaultValue={staffDetails}
                     id="amount"
                     name="amount"
+                    required
                     className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border px-2 py-3"
                   />
+                </div>
+                <div>
+                  <label
+                    htmlFor="method"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Payment Method
+                  </label>
+                  <select
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border px-2 py-3"
+                    name="method"
+                    id=""
+                  >
+                    <option value="cash">Cash</option>
+                    <option value="online">Online</option>
+                    <option value="cheque">Cheque</option>
+                    <option value="other">Other</option>
+                  </select>
                 </div>
               </div>
               <div>
                 <button
                   type="submit"
-                  defaultValue={staffDetails}
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mt-4 rounded"
                 >
                   Submit

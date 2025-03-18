@@ -118,7 +118,7 @@ function TeacherDetails({}) {
                         })
                       )}
                     </tr>
-                    <tr>
+                    {/* <tr>
                       {staffDetails.salaryPaid.length != 0 && (
                         <>
                           <td className="px-6 py-4 whitespace-nowrap">
@@ -127,7 +127,7 @@ function TeacherDetails({}) {
                           <td className="px-6 py-4 whitespace-nowrap">Rs.0</td>
                         </>
                       )}
-                    </tr>
+                    </tr> */}
                     <tr>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <strong>Total Salary</strong>

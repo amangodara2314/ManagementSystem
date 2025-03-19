@@ -26,6 +26,7 @@ function Staff(props) {
       staffId: staffDetails._id,
       batch: batch,
       method: e.target.method.value,
+      date: e.target.date.value,
     };
     axios
       .post(API + "/salary/add", data)
@@ -323,6 +324,22 @@ function Staff(props) {
                     <option value="cheque">Cheque</option>
                     <option value="other">Other</option>
                   </select>
+                </div>
+                <div className="">
+                  <label
+                    htmlFor="date"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Date
+                  </label>
+                  <input
+                    type="date"
+                    id="date"
+                    name="date"
+                    required
+                    defaultValue={new Date().toISOString().split("T")[0]}
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border px-2 py-3"
+                  />
                 </div>
               </div>
               <div>

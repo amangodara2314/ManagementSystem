@@ -2,47 +2,52 @@
 @tailwind components;
 @tailwind utilities;
 
-.image{
-    background: url(./Images/DSC_4081.JPG) fixed center center;
-    background-size: 110% 120%;
-    background-repeat: no-repeat;
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
 
+.image {
+  background: url(./Images/DSC_4081.JPG) fixed center center;
+  background-size: 110% 120%;
+  background-repeat: no-repeat;
 }
 .dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    margin-left: 10px;
-    border: 2px solid transparent;
-    animation: glow 1.5s infinite alternate;
-  }
-  
-  .dot-red {
-    background-color: #ff5555; }
-  
-  .dot-green {
-    background-color: #55cc55; 
-  }
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-left: 10px;
+  border: 2px solid transparent;
+  animation: glow 1.5s infinite alternate;
+}
 
-  @keyframes glow {
-    0% {
-      box-shadow: 0 0 5px rgba(255, 85, 85, 0.7); 
-    }
-    100% {
-      box-shadow: 0 0 15px rgba(255, 85, 85, 0.7); 
-    }
+.dot-red {
+  background-color: #ff5555;
+}
+
+.dot-green {
+  background-color: #55cc55;
+}
+
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 5px rgba(255, 85, 85, 0.7);
   }
-  
-  .dot-green {
-    animation: glow-green 1.5s infinite alternate; 
+  100% {
+    box-shadow: 0 0 15px rgba(255, 85, 85, 0.7);
   }
-  
-  @keyframes glow-green {
-    0% {
-      box-shadow: 0 0 5px rgba(85, 204, 85, 0.7);
-    }
-    100% {
-      box-shadow: 0 0 15px rgba(85, 204, 85, 0.7); 
-    }
+}
+
+.dot-green {
+  animation: glow-green 1.5s infinite alternate;
+}
+
+@keyframes glow-green {
+  0% {
+    box-shadow: 0 0 5px rgba(85, 204, 85, 0.7);
   }
-  
+  100% {
+    box-shadow: 0 0 15px rgba(85, 204, 85, 0.7);
+  }
+}

@@ -9,9 +9,8 @@ const Attendance = () => {
   const [date, setDate] = useState("");
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [updatingStudent, setUpdatingStudent] = useState(false); // Track student being updated
+  const [updatingStudent, setUpdatingStudent] = useState(null);
 
-  // Fetch students when class & date are selected
   useEffect(() => {
     if (!selectedClass || !date) return;
 
@@ -21,7 +20,6 @@ const Attendance = () => {
         params: { className: selectedClass, batch, date },
       })
       .then((response) => {
-        console.log(response.data);
         setStudents(response.data.students);
       })
       .catch((error) => {
@@ -32,7 +30,6 @@ const Attendance = () => {
       });
   }, [selectedClass, date, batch]);
 
-  // Mark Attendance for Unmarked Students
   const markAttendance = async (status, holidayReason = "") => {
     setLoading(true);
     try {
@@ -64,23 +61,43 @@ const Attendance = () => {
   };
 
   const updateSingleStudent = async (studentId, newStatus) => {
+    let holidayReason = "";
+
+    if (newStatus === "Holiday") {
+      holidayReason = prompt("Enter holiday reason:");
+      if (!holidayReason) return; // Exit if no reason is provided
+    }
+
     setUpdatingStudent(studentId);
     try {
       const response = await axios.post(`${API}/attendance/mark`, {
         date,
-        students: [{ id: studentId, status: newStatus }],
+        students: [
+          {
+            id: studentId,
+            status: newStatus,
+            ...(newStatus === "Holiday" ? { holidayReason } : {}),
+          },
+        ],
       });
 
       toast(response.data.message);
       setStudents((prev) =>
         prev.map((s) =>
-          s._id === studentId ? { ...s, attendanceStatus: newStatus } : s
+          s._id === studentId
+            ? {
+                ...s,
+                attendanceStatus: newStatus,
+                holidayReason: newStatus === "Holiday" ? holidayReason : "",
+              }
+            : s
         )
       );
     } catch (error) {
       console.error("Error updating attendance:", error);
+      toast("Error updating attendance");
     } finally {
-      setUpdatingStudent(false);
+      setUpdatingStudent(null);
     }
   };
 
@@ -111,18 +128,19 @@ const Attendance = () => {
         />
       </div>
 
+      {/* Mark Attendance Buttons */}
       <div className="mt-6 flex flex-col sm:flex-row gap-4 mb-6">
         <button
           onClick={() => markAttendance("Present")}
-          className="w-full sm:w-1/3 bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg transition disabled:opacity-50"
-          disabled={loading && students.length == 0 && updatingStudent == true}
+          className="w-full sm:w-1/3 bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg transition"
+          disabled={loading}
         >
           Mark All Present
         </button>
         <button
           onClick={() => markAttendance("Absent")}
-          className="w-full sm:w-1/3 bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg transition disabled:opacity-50"
-          disabled={loading && students.length == 0 && updatingStudent == true}
+          className="w-full sm:w-1/3 bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg transition"
+          disabled={loading}
         >
           Mark All Absent
         </button>
@@ -131,14 +149,14 @@ const Attendance = () => {
             const reason = prompt("Enter holiday reason:");
             if (reason) markAttendance("Holiday", reason);
           }}
-          className="w-full sm:w-1/3 bg-yellow-500 hover:bg-yellow-600 text-white py-3 rounded-lg transition disabled:opacity-50"
-          disabled={loading && students.length === 0}
+          className="w-full sm:w-1/3 bg-yellow-500 hover:bg-yellow-600 text-white py-3 rounded-lg transition"
+          disabled={loading}
         >
           Mark as Holiday
         </button>
       </div>
 
-      {/* Show message if class & date are not selected */}
+      {/* Attendance Table */}
       {!selectedClass || !date ? (
         <div className="w-full p-4 text-center bg-yellow-100 text-yellow-800 rounded-lg">
           Please select a class and date to view students.
@@ -148,55 +166,55 @@ const Attendance = () => {
           <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
       ) : (
-        <div className="w-full">
-          {/* Attendance Table */}
-          <table className="w-full border-collapse border border-gray-300 shadow-sm rounded-lg overflow-hidden">
-            <thead className="bg-blue-500 text-white">
+        <table className="w-full border-collapse border border-gray-300 shadow-sm rounded-lg overflow-hidden">
+          <thead className="bg-blue-500 text-white">
+            <tr>
+              <th className="p-4 border">Name</th>
+              <th className="p-4 border">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {students.length === 0 ? (
               <tr>
-                <th className="p-4 border">Name</th>
-                <th className="p-4 border">Status</th>
+                <td colSpan="2" className="p-4 text-center text-gray-600">
+                  No students found.
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {students.length === 0 ? (
-                <tr>
-                  <td colSpan="2" className="p-4 text-center text-gray-600">
-                    No students found.
+            ) : (
+              students.map((s) => (
+                <tr
+                  key={s._id}
+                  className="text-center bg-white hover:bg-gray-100"
+                >
+                  <td className="p-4 border">{s.name}</td>
+                  <td className="p-4 border space-x-2">
+                    {["Present", "Absent", "Not Marked", "Holiday"].map(
+                      (status) => (
+                        <button
+                          key={status}
+                          onClick={() => updateSingleStudent(s._id, status)}
+                          className={`px-3 py-1 rounded-lg text-white ${
+                            s.attendanceStatus === status
+                              ? "bg-blue-600"
+                              : "bg-gray-400 hover:bg-gray-500"
+                          }`}
+                          disabled={updatingStudent === s._id}
+                        >
+                          {status}
+                        </button>
+                      )
+                    )}
+                    {s.attendanceStatus === "Holiday" && (
+                      <span className="ml-2 text-gray-600">
+                        Reason: {s.holidayReason}
+                      </span>
+                    )}
                   </td>
                 </tr>
-              ) : (
-                students.map((s) => (
-                  <tr
-                    key={s._id}
-                    className="text-center bg-white hover:bg-gray-100"
-                  >
-                    <td className="p-4 border">{s.name}</td>
-                    <td className="p-4 border space-x-2">
-                      <select
-                        className="p-2 border rounded"
-                        value={s.attendanceStatus}
-                        disabled={updatingStudent == true}
-                        onChange={(e) =>
-                          updateSingleStudent(s._id, e.target.value)
-                        }
-                      >
-                        <option value="Present">Present</option>
-                        <option value="Not Marked">Not-Marked</option>
-                        <option value="Absent">Absent</option>
-                        <option value="Holiday">Holiday</option>
-                      </select>
-                      {s.attendanceStatus == "Holiday" && (
-                        <span>Reason : {s.holidayReason}</span>
-                      )}
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-
-          {/* Mark Attendance Buttons */}
-        </div>
+              ))
+            )}
+          </tbody>
+        </table>
       )}
     </div>
   );

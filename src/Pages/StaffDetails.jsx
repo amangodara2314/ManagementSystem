@@ -5,14 +5,11 @@ import { useReactToPrint } from "react-to-print";
 import formatDate from "../utils/dateOfBirthFormat";
 import { Pencil, Trash2 } from "lucide-react";
 
-function TeacherDetails({}) {
+function StaffDetails({}) {
   const { staffDetails, API, setStaffDetails } = useContext(MainContext);
-  const navigate = useNavigate();
   const componentRef = useRef();
   const [showPopup, setShowPopup] = useState(null);
-  const [updatedAmount, setUpdatedAmount] = useState(0);
-  const [updatedDate, setUpdatedDate] = useState("");
-  const [updatedMethod, setUpdatedMethod] = useState("");
+
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
@@ -75,6 +72,7 @@ function TeacherDetails({}) {
           amount: e.target.amount.value,
           method: e.target.method.value,
           date: e.target.date.value,
+          remarks: e.target.remarks.value,
         }),
       });
       const data = await response.json();
@@ -156,6 +154,24 @@ function TeacherDetails({}) {
                         <option value="other">Other</option>
                       </select>
                     </div>
+                    <div>
+                      <label
+                        htmlFor="remarks"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Remarks{" "}
+                        <span className="text-xs text-gray-400">
+                          (optional)
+                        </span>
+                      </label>
+                      <input
+                        type="text"
+                        id="remarks"
+                        name="remarks"
+                        defaultValue={showPopup.item?.remarks || ""}
+                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border px-2 py-3"
+                      />
+                    </div>
 
                     <div className="">
                       <label
@@ -205,9 +221,9 @@ function TeacherDetails({}) {
           <div className="p-4 rounded w-full" ref={componentRef}>
             <div className="space-y-2 w-full">
               <div className="text-xl font-bold mb-1x text-center tracking-widest">
-                FRANKLIN GIRLS P.G. COLLEGE
+                FRANKLIN (P.G.) COLLEGE
                 <div className="text-gray-600 font-semibold text-sm">
-                  THALARKA, TEHSIL-NOHAR, DISTT. HANUMANGARH <br />
+                  THALARKA, TEHSIL-NOHAR, DIST. HANUMANGARH <br />
                   <span>9829142314,9413642314</span>
                 </div>
               </div>
@@ -283,8 +299,12 @@ function TeacherDetails({}) {
                               key={i}
                               className="px-6 py-2 whitespace-nowrap flex items-center justify-between"
                             >
-                              Rs.{f.amount} - {formatDate(f.date)} - Payment
-                              method - {f.method ? f.method : "N/A"}
+                              <p className="w-[70%] text-wrap">
+                                Rs.{f.amount} - {formatDate(f.date)} - Payment
+                                Method -{" "}
+                                {f.method ? f.method.toUpperCase() : "N/A"} -{" "}
+                                {f.remarks ? "Remarks : " + f.remarks : null}
+                              </p>
                               <span className="space-x-6 no-print">
                                 <button
                                   onClick={() => handleDelete(f)}
@@ -325,7 +345,7 @@ function TeacherDetails({}) {
                     </tr>
                     <tr>
                       <td className="px-6 py-4 whitespace-nowrap w-[40%]">
-                        <strong>Remaining Fees</strong>
+                        <strong>Remaining Salary</strong>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         Rs.{" "}
@@ -356,4 +376,4 @@ function TeacherDetails({}) {
   );
 }
 
-export default TeacherDetails;
+export default StaffDetails;

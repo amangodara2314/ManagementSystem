@@ -32,6 +32,10 @@ const DownloadAttendance = () => {
         params: { cls: selectedClass, batch, month, year, format },
         responseType: "blob",
       });
+      if (response.data.success === false) {
+        toast.error(response.data.msg);
+        return;
+      }
 
       const fileExtension = format === "pdf" ? "pdf" : "xlsx";
       const fileName = `Attendance_${selectedClass}_${month}_${year}.${fileExtension}`;

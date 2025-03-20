@@ -131,7 +131,7 @@ function DriverDetails({}) {
                       </tr>
                       <tr>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <strong>Remaining Fees</strong>
+                          <strong>Remaining Salary</strong>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           Rs.

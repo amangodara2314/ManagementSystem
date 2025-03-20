@@ -27,6 +27,7 @@ function Staff(props) {
       batch: batch,
       method: e.target.method.value,
       date: e.target.date.value,
+      remarks: e.target.remarks.value,
     };
     axios
       .post(API + "/salary/add", data)
@@ -100,7 +101,7 @@ function Staff(props) {
         >
           <div className="bg-white rounded-lg p-8 shadow">
             <h1 className="text-3xl font-semibold mb-4 flex justify-between">
-              Edit Student Details
+              Edit Staff Details
               <span
                 className="font-normal text-xl cursor-pointer"
                 onClick={() => {
@@ -325,6 +326,21 @@ function Staff(props) {
                     <option value="other">Other</option>
                   </select>
                 </div>
+                <div>
+                  <label
+                    htmlFor="remarks"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Remarks{" "}
+                    <span className="text-xs text-gray-400">(optional)</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="remarks"
+                    name="remarks"
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border px-2 py-3"
+                  />
+                </div>
                 <div className="">
                   <label
                     htmlFor="date"
@@ -395,7 +411,7 @@ function Staff(props) {
                   key={index}
                   className="bg-gray-100 p-4 rounded-md my-2 flex justify-between items-center cursor-pointer hover:bg-gray-200"
                 >
-                  <Link to={"/teacher-details"}>
+                  <Link to={"/staff-details"}>
                     <h3 className="text-lg font-bold">{stf.name}</h3>
                     <div className="flex gap-16">
                       <div className="flex gap-8 mt-2">
@@ -472,7 +488,7 @@ function Staff(props) {
                   key={index}
                   className="bg-gray-100 p-4 rounded-md my-2 flex justify-between items-center cursor-pointer hover:bg-gray-200"
                 >
-                  <Link to={"/driver-details"}>
+                  <Link to={"/staff-details"}>
                     <h3 className="text-lg font-bold">{stf.name}</h3>
                     <div className="flex gap-16">
                       <div className="">

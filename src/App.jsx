@@ -8,11 +8,11 @@ import StudentDetails from "./Pages/StudentDetails";
 import Revenue from "./Pages/Revenue";
 import Staff from "./Pages/Staff";
 import AddStaff from "./Pages/AddStaff";
-import TeacherDetails from "./Pages/TeacherDetails";
 import DriverDetails from "./Pages/DriverDetails";
 import Expenditure from "./Pages/Expenditure";
 import Attendance from "./Pages/Attendance";
 import DownloadAttendance from "./Pages/DownloadAttendance";
+import StaffDetails from "./Pages/StaffDetails";
 
 function App() {
   const routes = createBrowserRouter([
@@ -62,8 +62,8 @@ function App() {
         },
 
         {
-          path: "/teacher-details",
-          element: <TeacherDetails />,
+          path: "/staff-details",
+          element: <StaffDetails />,
         },
         {
           path: "/driver-details",
